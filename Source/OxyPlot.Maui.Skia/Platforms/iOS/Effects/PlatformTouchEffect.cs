@@ -75,27 +75,28 @@ class TouchRecognizer : UIGestureRecognizer
         foreach (UITouch touch in touches.Cast<UITouch>())
         {
             long id = ((IntPtr)touch.Handle).ToInt64();
-            FireEvent(this, id, TouchActionType.Pressed, touch, true);
 
             if (!idToTouchDictionary.ContainsKey(id))
             {
                 idToTouchDictionary.Add(id, this);
             }
         }
+
+        var firstTouch = touches.Cast<UITouch>().First();
+        long fid = ((IntPtr)firstTouch.Handle).ToInt64();
+        FireEvent(this, fid, TouchActionType.Pressed, touches, true);
     }
 
     public override void TouchesMoved(NSSet touches, UIEvent evt)
     {
         base.TouchesMoved(touches, evt);
 
-        foreach (UITouch touch in touches.Cast<UITouch>())
+        var firstTouch = touches.Cast<UITouch>().First();
+        long id = ((IntPtr)firstTouch.Handle).ToInt64();
+        CheckForBoundaryHop(firstTouch);
+        if (idToTouchDictionary[id] != null)
         {
-            long id = ((IntPtr)touch.Handle).ToInt64();
-            CheckForBoundaryHop(touch);
-            if (idToTouchDictionary[id] != null)
-            {
-                FireEvent(idToTouchDictionary[id], id, TouchActionType.Moved, touch, true);
-            }
+            FireEvent(idToTouchDictionary[id], id, TouchActionType.Moved, touches, true);
         }
     }
 
@@ -103,15 +104,17 @@ class TouchRecognizer : UIGestureRecognizer
     {
         base.TouchesEnded(touches, evt);
 
+        var firstTouch = touches.Cast<UITouch>().First();
+        long fid = ((IntPtr)firstTouch.Handle).ToInt64();
+        CheckForBoundaryHop(firstTouch);
+        if (idToTouchDictionary[fid] != null)
+        {
+            FireEvent(idToTouchDictionary[fid], fid, TouchActionType.Released, touches, false);
+        }
+
         foreach (UITouch touch in touches.Cast<UITouch>())
         {
             long id = ((IntPtr)touch.Handle).ToInt64();
-            CheckForBoundaryHop(touch);
-            if (idToTouchDictionary[id] != null)
-            {
-                FireEvent(idToTouchDictionary[id], id, TouchActionType.Released, touch, false);
-            }
-
             idToTouchDictionary.Remove(id);
         }
     }
@@ -169,5 +172,24 @@ class TouchRecognizer : UIGestureRecognizer
         // Call that method
         onTouchAction(recognizer.element,
             new TouchActionEventArgs(id, actionType, new[] { xfPoint }, isInContact));
+    }
+
+    void FireEvent(TouchRecognizer recognizer, long id, TouchActionType actionType, NSSet touches, bool isInContact)
+    {
+        List<Point> locations = new List<Point>();
+        foreach (UITouch touch in touches.Cast<UITouch>())
+        {
+            // Convert touch location to Maui Point value
+            CGPoint cgPoint = touch.LocationInView(recognizer.View);
+            Point xfPoint = new Point(cgPoint.X, cgPoint.Y);
+            locations.Add(xfPoint);
+        }
+
+        // Get the method to call for firing events
+        var onTouchAction = recognizer.touchPlatformEffect.OnTouchAction;
+
+        // Call that method
+        onTouchAction(recognizer.element,
+            new TouchActionEventArgs(id, actionType, locations.ToArray(), isInContact));
     }
 }
