@@ -65,3 +65,24 @@ jobs:
       run: dotnet build ./Source/OxyPlot.Maui.Skia/OxyPlot.Maui.Skia.csproj /p:Configuration=Release /t:restore,build,pack /p:Version=$(git describe) /p:ContinuousIntegrationBuild=true /p:DeterministicSourcePaths=false
     - name: Build sample
       run: dotnet build ./Source/OxyplotMauiSample/OxyplotMauiSample.csproj /p:Configuration=Release /t:restore,build /p:Version=$(git describe) /p:ContinuousIntegrationBuild=true /p:DeterministicSourcePaths=false
+
+  linuxBuild:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+      with:
+        fetch-depth: 0
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v4
+      with:
+        dotnet-version: 8.0.x
+    - name: Install workloads
+      run: dotnet workload install android wasm-tools maui-android
+    - name: Install Android tools
+      run: |
+        ${ANDROID_SDK_ROOT}/cmdline-tools/latest/bin/sdkmanager \
+        --sdk_root=$ANDROID_SDK_ROOT "platform-tools"
+    - name: Build library (with nuget package)
+      run: dotnet build ./Source/OxyPlot.Maui.Skia/OxyPlot.Maui.Skia.csproj /p:Configuration=Release /t:restore,build,pack /p:Version=$(git describe) /p:ContinuousIntegrationBuild=true /p:DeterministicSourcePaths=false
+    - name: Build sample
+      run: dotnet build ./Source/OxyplotMauiSample/OxyplotMauiSample.csproj /p:Configuration=Release /t:restore,build /p:Version=$(git describe) /p:ContinuousIntegrationBuild=true /p:DeterministicSourcePaths=false
