@@ -449,46 +449,32 @@ public partial class TrackerControl
 
         if (horizontalLine != null)
         {
-            horizontalLine.WidthRequest = canvasWidth;
-
             if (LineExtents.Width > 0)
             {
-                horizontalLine.X1 = LineExtents.Left;
-                horizontalLine.X2 = LineExtents.Right;
+                horizontalLine.WidthRequest = LineExtents.Width;
             }
             else
             {
-                horizontalLine.X1 = 0;
-                horizontalLine.X2 = canvasWidth;
+                horizontalLine.WidthRequest = canvasWidth;
             }
 
-            horizontalLine.Y1 = Position.Y;
-            horizontalLine.Y2 = Position.Y;
-
             horizontalLine.TranslationY = Position.Y;
-            horizontalLine.TranslationX = horizontalLine.X1;
+            horizontalLine.TranslationX = LineExtents.Left;
         }
 
         if (verticalLine != null)
         {
-            verticalLine.HeightRequest = canvasHeight;
-
             if (LineExtents.Height > 0)
             {
-                verticalLine.Y1 = LineExtents.Top;
-                verticalLine.Y2 = LineExtents.Bottom;
+                verticalLine.HeightRequest = LineExtents.Height;
             }
             else
             {
-                verticalLine.Y1 = 0;
-                verticalLine.Y2 = canvasHeight;
+                verticalLine.HeightRequest = canvasHeight;
             }
 
-            verticalLine.X1 = Position.X;
-            verticalLine.X2 = Position.X;
-
             verticalLine.TranslationX = Position.X;
-            verticalLine.TranslationY = verticalLine.Y1;
+            verticalLine.TranslationY = LineExtents.Top;
         }
 
         Opacity = 1;
