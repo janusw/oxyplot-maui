@@ -17,8 +17,11 @@ public class PlotController : ControllerBase, IPlotController
         this.BindTouchDown(cmd);
 
 #if WINDOWS
-            this.BindMouseWheel(OxyPlot.PlotCommands.ZoomWheel);
-            this.BindMouseWheel(OxyModifierKeys.Control, OxyPlot.PlotCommands.ZoomWheelFine);
+        this.BindMouseWheel(OxyPlot.PlotCommands.ZoomWheel);
+        this.BindMouseWheel(OxyModifierKeys.Control, OxyPlot.PlotCommands.ZoomWheelFine);
+#endif
+#if MACCATALYST
+        this.BindMouseWheel(OxyPlot.PlotCommands.ZoomWheel);
 #endif
     }
 }
