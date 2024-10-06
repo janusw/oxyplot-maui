@@ -1,16 +1,21 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
-<ContentView x:Class="OxyPlot.Maui.Skia.TrackerControl" xmlns="http://schemas.microsoft.com/dotnet/2021/maui" xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml">
+<ContentView x:Class="OxyPlot.Maui.Skia.TrackerControl" xmlns="http://schemas.microsoft.com/dotnet/2021/maui" xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml" xmlns:skia="using:OxyPlot.Maui.Skia">
     <ContentView.Resources>
-        <ControlTemplate x:Key="TrackerControlTemplate">
+        <ControlTemplate x:Key="TrackerControlTemplate" x:DataType="skia:TrackerControl">
             <AbsoluteLayout HorizontalOptions="Fill" VerticalOptions="Fill">
                 <Line
                     x:Name="PART_HorizontalLine"
+                    Background="{TemplateBinding LineStroke}"
+                    Fill="{TemplateBinding LineStroke}"
                     HeightRequest="1"
                     IsVisible="{TemplateBinding HorizontalLineVisibility}"
                     Stroke="{TemplateBinding LineStroke}"
+                    StrokeDashArray="{TemplateBinding LineDashArray}"
                     WidthRequest="999" />
                 <Line
                     x:Name="PART_VerticalLine"
+                    Background="{TemplateBinding LineStroke}"
+                    Fill="{TemplateBinding LineStroke}"
                     HeightRequest="999"
                     IsVisible="{TemplateBinding VerticalLineVisibility}"
                     Stroke="{TemplateBinding LineStroke}"
