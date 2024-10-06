@@ -34,7 +34,7 @@
 	  <CreatePackage>false</CreatePackage>
 	</PropertyGroup>
 	<ItemGroup>
-		<PackageReference Include="OxyPlot.Core" Version="2.1.2" />
+		<PackageReference Include="OxyPlot.Core" Version="2.2.0" />
 		<PackageReference Include="SkiaSharp.HarfBuzz" Version="2.88.8" />
 		<PackageReference Include="SkiaSharp.Views.Maui.Controls" Version="2.88.8" />
 	</ItemGroup>
