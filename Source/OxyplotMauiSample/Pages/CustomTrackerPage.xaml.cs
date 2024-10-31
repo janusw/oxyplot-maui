@@ -1,4 +1,6 @@
-﻿using ExampleLibrary;
+﻿using System.Diagnostics;
+using ExampleLibrary;
+using OxyPlot;
 
 namespace OxyplotMauiSample
 {
@@ -13,6 +15,12 @@ namespace OxyplotMauiSample
         private void CustomTrackerPage_Loaded(object sender, EventArgs e)
         {
             PlotView.Model = ShowCases.CreateNormalDistributionModel();
+            PlotView.Model.TrackerChanged += OnTrackerChanged;
+        }
+
+        private void OnTrackerChanged(object sender, TrackerEventArgs e)
+        {
+            Debug.WriteLine($"tracker changed: {e.HitResult}");
         }
     }
 }
